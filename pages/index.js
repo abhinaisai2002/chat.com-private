@@ -12,6 +12,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 
 export default function Home() {
   const session = useSession();
@@ -285,18 +287,24 @@ export default function Home() {
                 </div>
                 <div className='my-4'>
                   <div className='flex justify-center'>
-                    <Link
-                      href={session.status === 'authenticated' ? '/':'/auth/login'}
-                      className={cn(
-                      buttonVariants(
-                        {
-                          variant:'default'
-                        }
-                      ),
-                      "flex justify-around ")}>
-                      <Gem className='h-4 w-4 mr-4' />
-                      {session.status !== 'authenticated' ? 'Signup' :'Upgrade now.'}
-                    </Link>
+                  
+                    {session.status !== 'authenticated' ? (
+                      <Link
+                        href='/auth/login'
+                        className={cn(
+                        buttonVariants(
+                          {
+                            variant:'default'
+                          }
+                        ),
+                        "flex justify-around ")}>
+                        <Gem className='h-4 w-4 mr-4' />
+                        {session.status !== 'authenticated' ? 'Signup' :'Upgrade now.'}
+                      </Link>
+                    ) : (
+                        <UpgradeButton />
+                      )
+                    }
                   </div>
                 </div>
               </div>
@@ -307,6 +315,23 @@ export default function Home() {
     </div>
   );
 }
+
+function UpgradeButton() {
+
+  const upgradeMutation = useMutation({
+    mutationKey: ['user', 'subscription'],
+    mutationFn: () => {
+      return axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/stripe/create-session`)
+    }
+  });
+  return (
+    <Button onClick={() => upgradeMutation.mutate() }>
+      <Gem className='h-4 w-4 mr-4' />
+      Upgrade now.
+    </Button>
+  )
+}
+
 
 
 export async function getServerSideProps(context) {
