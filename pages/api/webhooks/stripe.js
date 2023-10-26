@@ -3,7 +3,11 @@ import { prisma } from '@/prisma/client'
 import { headers } from 'next/headers'
 import Stripe from 'stripe'
 
-export async function POST() {
+export async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.status(404).json({ message: 'Not allowed' });
+    return;
+  }
   const body = await request.text()
   const signature = headers().get('Stripe-Signature') ?? ''
 
