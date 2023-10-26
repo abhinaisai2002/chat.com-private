@@ -20,20 +20,19 @@ export async function handler(req, res) {
       process.env.STRIPE_WEBHOOK_SECRET || ''
     )
   } catch (err) {
-    return new Response(
+    res.status(400).send(
       `Webhook Error: ${
         err instanceof Error ? err.message : 'Unknown Error'
-      }`,
-      { status: 400 }
+      }`
     )
+    return;
   }
 
   const session = event.data.object;
 
   if (!session?.metadata?.userId) {
-    return new Response(null, {
-      status: 200,
-    })
+    res.status(200).send('');
+    return
   }
 
   if (event.type === 'checkout.session.completed') {
@@ -75,5 +74,5 @@ export async function handler(req, res) {
     })
   }
 
-  return new Response(null, { status: 200 })
+  return res.status(200).send('');
 }
