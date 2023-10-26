@@ -52,7 +52,8 @@ export async function getServerSideProps(context) {
   }
 
   const userSubscriptionPlan = await getUserSubscriptionPlan(userDetails);  
-
+  const c = userSubscriptionPlan.stripeCurrentPeriodEnd
+  userSubscriptionPlan.stripeCurrentPeriodEnd = c.toString()
   return {
     props: {
       session,

@@ -110,6 +110,7 @@ export async function getServerSideProps(context) {
       return data.map((board) => {
         const c = board.createdAt;
         board.createdAt = c.toString();
+        console.log(112, c.toString());
         return board;
       });
     },

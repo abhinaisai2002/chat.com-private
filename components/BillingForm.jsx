@@ -36,6 +36,7 @@ const BillingForm = ({ subscriptionPlan }) => {
     },
   });
 
+  console.log(subscriptionPlan);
   return (
     <MaxWidthWrapper className="max-w-5xl">
       <form
@@ -68,8 +69,12 @@ const BillingForm = ({ subscriptionPlan }) => {
               <p className="rounded-full text-xs font-medium">
                 {subscriptionPlan.isCanceled
                   ? "Your plan will be canceled on "
-                  : "Your plan renews on"}
-                {format(subscriptionPlan.stripeCurrentPeriodEnd, "dd.MM.yyyy")}.
+                  : "Your plan renews on "}
+                {format(
+                  new Date(subscriptionPlan.stripeCurrentPeriodEnd),
+                  "dd-MMM-yyyy"
+                )}
+                .
               </p>
             ) : null}
           </CardFooter>
