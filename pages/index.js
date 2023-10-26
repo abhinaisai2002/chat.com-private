@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Check, Diamond, DiamondIcon, Gem, HelpCircle, LucideDiamond, Minus } from 'lucide-react';
+import { ArrowRight, Check, Diamond, DiamondIcon, Gem, HelpCircle, Loader2Icon, LucideDiamond, Minus } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 import LandingNav from '@/components/app/LandingNav';
@@ -14,6 +14,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 export default function Home() {
   const session = useSession();
@@ -317,17 +318,30 @@ export default function Home() {
 }
 
 function UpgradeButton() {
-
+  const router = useRouter();
   const upgradeMutation = useMutation({
     mutationKey: ['user', 'subscription'],
     mutationFn: () => {
       return axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/stripe/create-session`)
+    },
+    onSuccess: (data) => {
+      console.log(data.data);
+      window.open(data.data.url);
     }
   });
   return (
-    <Button onClick={() => upgradeMutation.mutate() }>
-      <Gem className='h-4 w-4 mr-4' />
-      Upgrade now.
+    <Button onClick={() => upgradeMutation.mutate()}>
+      {
+        upgradeMutation.isPending ? (
+          <Loader2Icon className='w-4 h-4 animate-spin' />
+        ) : (
+          <>
+            <Gem className = 'h-4 w-4 mr-4' />
+            Upgrade now.
+          </>
+        )
+      }
+      
     </Button>
   )
 }

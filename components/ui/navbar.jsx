@@ -33,6 +33,16 @@ export default function navbar() {
           </NavigationMenuList>
         </NavigationMenu>
         <div className="flex  justify-between">
+          <Link
+            href={"/billing"}
+            className={cn(
+              buttonVariants({
+                variant: "link",
+              })
+            )}
+          >
+            Billing
+          </Link>
           <Button onClick={() => signOut()}>Logout</Button>
         </div>
       </div>
