@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 export default function Home() {
   const session = useSession();
   console.log(session);
-  if (session.data.status === 'loggedout') {
+  if (session.data?.status === 'loggedout') {
     session.status = 'unauthenticated'
   }
   return (
