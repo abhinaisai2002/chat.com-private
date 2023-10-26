@@ -2,19 +2,35 @@ import { stripe } from '@/lib/pricing/getUserSubscriptionPlan'
 import { prisma } from '@/prisma/client'
 import Stripe from 'stripe'
 
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+async function buffer(readable) {
+  const chunks = [];
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(404).json({ message: 'Not allowed' });
     return;
   }
-  const body = JSON.stringify(req.body);
-  const signature = req.headers['stripe-signature']  ?? ''
+  const buf = await buffer(req);
+  const rawBody = buf.toString('utf8');
+  const signature = req.headers['stripe-signature'] ?? ''
 
   let event;
 
   try {
     event = stripe.webhooks.constructEvent(
-      body,
+      rawBody,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET || ''
     )
