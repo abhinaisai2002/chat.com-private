@@ -1,6 +1,5 @@
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/prisma/client'
-import { headers } from 'next/headers'
 import Stripe from 'stripe'
 
 export async function handler(req, res) {
@@ -9,7 +8,7 @@ export async function handler(req, res) {
     return;
   }
   const body = await request.text()
-  const signature = headers().get('Stripe-Signature') ?? ''
+  const signature = req.headers['Stripe-Signature']  ?? ''
 
   let event;
 
