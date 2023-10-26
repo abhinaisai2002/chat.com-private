@@ -2,7 +2,7 @@ import { stripe } from '@/lib/pricing/getUserSubscriptionPlan'
 import { prisma } from '@/prisma/client'
 import Stripe from 'stripe'
 
-export async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(404).json({ message: 'Not allowed' });
     return;
@@ -73,5 +73,6 @@ export async function handler(req, res) {
     })
   }
 
-  return res.status(200).send('');
+  res.status(200).send('');
+  return;
 }
