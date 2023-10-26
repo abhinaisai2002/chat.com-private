@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return;
   }
   const body = req.body;
-  const signature = req.headers['Stripe-Signature']  ?? ''
+  const signature = req.headers['stripe-signature']  ?? ''
 
   let event;
 
@@ -29,8 +29,8 @@ export default async function handler(req, res) {
 
   const session = event.data.object;
 
-  if (!session?.metadata?.userId) {
-    res.status(200).send('');
+  if (!(session?.metadata?.userId)) {
+    res.status(400).send('');
     return
   }
 
