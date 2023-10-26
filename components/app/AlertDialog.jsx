@@ -7,8 +7,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "./../ui/alert-dialog";
 import { useRecoilState } from "recoil";
 import { alertDialog } from "../atoms/alertDialogAtom";
 
