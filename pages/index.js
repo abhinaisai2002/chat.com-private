@@ -353,9 +353,11 @@ export async function getServerSideProps(context) {
   // // console.log(session);
   if (!session) {
     return {
-      redirect: {
-        destination: '/auth/login',
-      },
+      props: {
+        session: {
+          status:"loggedout"
+        }
+      }
     };
   }
 
