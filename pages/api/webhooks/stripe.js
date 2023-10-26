@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     res.status(404).json({ message: 'Not allowed' });
     return;
   }
-  const body = req.body;
+  const body = JSON.stringify(req.body);
   const signature = req.headers['stripe-signature']  ?? ''
 
   let event;
