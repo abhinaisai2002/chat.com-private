@@ -201,7 +201,7 @@ export default function Home() {
                   <ul className='my-10 space-y-5 px-8'>
                     {pricingItems[0].features.map(({text,footnote,negative }) => {
                       return (
-                        <li className='flex items-center'>
+                        <li key={text}  className='flex items-center'>
                           {(negative ? (
                             <Minus className='w-4 h-4' />
                           ) : (
@@ -263,7 +263,7 @@ export default function Home() {
                   <ul className='my-10 space-y-5 px-8'>
                     {pricingItems[1].features.map(({text,footnote,negative }) => {
                       return (
-                        <li className='flex items-center'>
+                        <li key={text} className='flex items-center'>
                           {(negative ? (
                             <Minus className='w-4 h-4' />
                           ) : (

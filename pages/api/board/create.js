@@ -1,8 +1,9 @@
-import { getServerSession, unstable_getServerSession } from 'next-auth/next';
-import { getToken } from 'next-auth/jwt';
+import { getServerSession } from 'next-auth/next';
 import { uuid } from 'uuidv4';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { prisma } from '@/prisma/client';
+import { getUserSubscriptionPlan } from '@/lib/pricing/getUserSubscriptionPlan';
+import { PLANS } from '@/lib/pricing/config/stripe';
 
 export default async function handler(
   req,
@@ -22,13 +23,34 @@ export default async function handler(
       return;
     }
 
+    const dbUser = await prisma.user.findFirst({
+      where: {
+        id:userId
+      }
+    })
+    if (!dbUser) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+
     const boards = await prisma.board.findMany({
       where: {
         userId,
       }
     })
 
-    if (boards.length >= 5) {
+    const subscriptionPlan = await getUserSubscriptionPlan(dbUser);
+    const { isSubscribed } = subscriptionPlan;
+    
+    const boardsProExceeded = boards.length >= PLANS.find(plan => plan.name === 'Pro').boardsPerAccount;
+    const boardsFreeExceeded = boards.length >= PLANS.find(plan => plan.name === 'Free').boardsPerAccount;
+
+    if ((isSubscribed && boardsProExceeded)) {
+      res.status(401).json({message:"Cannot have more than boards.Please upgrade."})
+      return;
+    }
+
+    if (!isSubscribed && boardsFreeExceeded) {
       res.status(401).json({message:"Cannot have more than boards.Please upgrade."})
       return;
     }

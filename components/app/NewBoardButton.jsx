@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import createBoard from "@/lib/backend-api/createBoard";
 import {
   Dialog,
@@ -16,6 +16,7 @@ import { useToast } from "../ui/use-toast";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { alertDialog } from "../atoms/alertDialogAtom";
+import Link from "next/link";
 
 export default function NewBoardButton() {
   const [showModal, setShowModal] = React.useState();
@@ -106,10 +107,29 @@ export default function NewBoardButton() {
         <Dialog open={alert} onOpenChange={(e) => setAlert(false)}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Upgrade Your plan.</DialogTitle>
+              <DialogTitle>Max boards reached.</DialogTitle>
               <DialogDescription>
-                You have a maximum limit of 5 boards. For more boards please
-                upgrade your plan
+                You have reached the limit of creating boards. Checkout the
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_API_URL}/#pricing`}
+                  className={buttonVariants({
+                    variant: "link",
+                    className: "px-0 mx-1",
+                  })}
+                >
+                  pricing
+                </Link>
+                plans and
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_API_URL}/billing`}
+                  className={buttonVariants({
+                    variant: "link",
+                    className: "px-0 mx-1",
+                  })}
+                >
+                  billing
+                </Link>
+                dashboard.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>

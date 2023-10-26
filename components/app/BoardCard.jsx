@@ -31,7 +31,7 @@ export default function BoardCard({ name, date, board }) {
       <Link href={`/board/${board.id}`} target="_blank">
         <div className="flex flex-row justify-start items-center">
           <div className="ml-5 w-8 h-8 flex-shrink-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500"></div>
-          <div className="ml-4  md:w-48 overflow-hidden">{name}</div>
+          <div className="ml-4  truncate ">{name}</div>
         </div>
         <div></div>
       </Link>

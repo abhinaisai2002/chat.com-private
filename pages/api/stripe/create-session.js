@@ -25,21 +25,21 @@ export default async function handler(
       return;
     }
 
-    const userDetails = await prisma.user.findFirst({
+    const dbUser = await prisma.user.findFirst({
         where: {
           id:userId
       }
     })
-    if (!userDetails) {
+    if (!dbUser) {
       res.status(401).json({ message: 'User not found' });
       return;
     }
 
-    const userSubscriptionPlan = await getUserSubscriptionPlan(userDetails);
+    const userSubscriptionPlan = await getUserSubscriptionPlan(dbUser);
 
     console.log(userSubscriptionPlan);
 
-    if (userSubscriptionPlan.isSubscribed && userDetails.stripeCustomerId) {
+    if (userSubscriptionPlan.isSubscribed && dbUser.stripeCustomerId) {
       const stripeSession =
         await stripe.billingPortal.sessions.create({
           customer: dbUser.stripeCustomerId,
